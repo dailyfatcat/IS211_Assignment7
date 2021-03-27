@@ -33,7 +33,7 @@ class Game:
         self.people = []
         self.die = Dice(0)
         self.winner = ""
-        self.winningscore = 100
+        self.winningscore = 20
 
     def resetGame(self):
         self.winner = ""
@@ -48,7 +48,8 @@ class Game:
         return
 
     def playerTurn(self, player, die):
-        currentScore = 0
+        turntotal = 0
+        currentscore = player.getScore()
         print(f"Player: {player.name} turn")
         print(f"Start turn: Total game score is : {player.getScore()}")
         print("Enter r to roll, or h to hold")
@@ -60,13 +61,12 @@ class Game:
             #If a player doesn't roll a one, print requirements
             #And continue turn
             if roll != 1:
-                currentScore += roll
+                turntotal += roll
+                print(f"Your current turn score is: {turntotal}")
                 print(f"You rolled a: {roll}")
-                print(f"Your current score is: {currentScore}")
-                player.setScore(roll)
-                print(f"Total game score is: {player.getScore()}")
-                if player.getScore() >= self.winningscore:
+                if currentscore + turntotal >= self.winningscore:
                     self.winner = player.name
+                    player.setScore(turntotal + currentscore)
                     return
                 print("Enter r to roll, or h to hold")
                 choice = input()
@@ -74,6 +74,8 @@ class Game:
             else:
                 print("You rolled a 1, turn over")
                 return
+        player.setScore(turntotal + currentscore)
+        return
 
     def StartPIG(self):
         #Create the players
